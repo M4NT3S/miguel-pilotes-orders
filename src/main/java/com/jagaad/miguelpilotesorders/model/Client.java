@@ -1,9 +1,12 @@
 package com.jagaad.miguelpilotesorders.model;
 
 import jakarta.persistence.*;
+import lombok.Builder;
+import lombok.Data;
 
 import java.util.List;
-
+@Data
+@Builder
 @Entity
 @Table(name = "CLIENTS")
 public class Client {
