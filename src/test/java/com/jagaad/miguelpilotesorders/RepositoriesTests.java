@@ -1,8 +1,9 @@
 package com.jagaad.miguelpilotesorders;
 
 
-import com.jagaad.miguelpilotesorders.model.Client;
-import com.jagaad.miguelpilotesorders.model.Order;
+import com.jagaad.miguelpilotesorders.entity.Client;
+import com.jagaad.miguelpilotesorders.entity.Order;
+import com.jagaad.miguelpilotesorders.repository.ClientRepository;
 import com.jagaad.miguelpilotesorders.repository.OrderRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,12 +16,15 @@ import java.util.List;
 
 
 @DataJpaTest
-public class OrderRepositoryTests {
+public class RepositoriesTests {
 
-    private static final Logger log = LoggerFactory.getLogger(OrderRepositoryTests.class);
+    private static final Logger log = LoggerFactory.getLogger(RepositoriesTests.class);
 
     @Autowired
     private OrderRepository orderRepository;
+
+    @Autowired
+    private ClientRepository clientRepository;
 
     @Test
     public void insertOrder(){
@@ -81,6 +85,61 @@ public class OrderRepositoryTests {
         Assertions.assertThat(orderRepository.findById(insertingOrderTest.getId()).get().getPilotesQuantity()).isEqualTo(15);
 
     }
+
+    @Test
+    public void insertClient(){
+        Client clientTest = Client.builder()
+                .name("Sebastian")
+                .surname("Macchi")
+                .telephoneNumber("phoneNumber")
+                .email("sebastian@email.com")
+                .build();
+        clientRepository.save(clientTest);
+
+        Order orderTest = Order.builder()
+                .deliveryAddress("via Costantino Baroni 05")
+                .pilotesQuantity(5)
+                .orderTotal(50.00)
+                .client(clientTest)
+                .build();
+        orderRepository.save(orderTest);
+
+        System.out.println("THE ID GENERATED FOR THE ORDER ----->" + orderTest.getId());
+
+    }
+
+    @Test
+    public void retrievingMultipleOrdersFromSpecificClient(){
+        Client clientTest = Client.builder()
+                .name("Sebastian")
+                .surname("Macchi")
+                .telephoneNumber("phoneNumber")
+                .email("sebastian@email.com")
+                .build();
+        clientRepository.save(clientTest);
+
+        Order orderTest = Order.builder()
+                .deliveryAddress("via Costantino Baroni 05")
+                .pilotesQuantity(5)
+                .orderTotal(50.00)
+                .client(clientTest)
+                .build();
+        orderRepository.save(orderTest);
+
+        Order orderTest2 = Order.builder()
+                .deliveryAddress("via Matteotti 05")
+                .pilotesQuantity(10)
+                .orderTotal(50.00)
+                .client(clientTest)
+                .build();
+        orderRepository.save(orderTest2);
+
+        List<Order> listOrdersClientTest = orderRepository.findByClientIdEquals(clientTest.getId());
+
+        listOrdersClientTest.stream().forEach(order -> Assertions.assertThat(order.getClient().getId()).isEqualTo(clientTest.getId()));
+    }
+
+
 
 
 

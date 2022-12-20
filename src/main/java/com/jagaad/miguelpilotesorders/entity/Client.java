@@ -1,4 +1,4 @@
-package com.jagaad.miguelpilotesorders.model;
+package com.jagaad.miguelpilotesorders.entity;
 
 import jakarta.persistence.*;
 import lombok.Builder;
@@ -13,7 +13,7 @@ public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
+    private Long id;
 
     @Column(name="name")
     private String name;
@@ -21,13 +21,13 @@ public class Client {
     @Column(name="surname")
     private String surname;
 
-    @Column(name="telephone_number")
+    @Column(name="phone_number")
     private String telephoneNumber;
 
     @Column(name="email")
     private String email;
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client"  )
     private List<Order> orders;
 
 

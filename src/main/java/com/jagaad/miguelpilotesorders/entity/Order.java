@@ -1,4 +1,4 @@
-package com.jagaad.miguelpilotesorders.model;
+package com.jagaad.miguelpilotesorders.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -29,7 +29,7 @@ public class Order {
     @Column(name = "order_total")
     private double orderTotal;
 
-    @ManyToOne
+    @ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name="client_id")
     private Client client;
 }
