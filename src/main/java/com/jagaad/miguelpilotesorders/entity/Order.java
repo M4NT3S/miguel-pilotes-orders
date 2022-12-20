@@ -7,6 +7,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 
+import java.sql.Timestamp;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -26,8 +28,13 @@ public class Order {
     @Column(name = "pilotes_quantity")
     private int pilotesQuantity;
 
+    @Column(name="order_request_time")
+    private Timestamp orderRequestTime;
+
     @Column(name = "order_total")
     private double orderTotal;
+
+
 
     @ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name="client_id")

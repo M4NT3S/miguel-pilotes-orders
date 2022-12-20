@@ -1,11 +1,13 @@
 package com.jagaad.miguelpilotesorders.payload.request;
 
-import com.jagaad.miguelpilotesorders.entity.Client;
-import com.jagaad.miguelpilotesorders.entity.Order;
+import com.jagaad.miguelpilotesorders.dto.ClientDTO;
+import com.jagaad.miguelpilotesorders.dto.OrderDTO;
+import lombok.Data;
 
 import java.util.List;
 
+@Data
 public class TakeOrderRequest {
-    Client client;
-    List<Order> orders;
+    ClientDTO client;
+    List<OrderDTO> orders;
 }

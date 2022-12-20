@@ -5,7 +5,7 @@ import com.jagaad.miguelpilotesorders.entity.Order;
 import org.mapstruct.Mapper;
 
 
-@Mapper
+@Mapper(componentModel = "spring")
 public interface OrderMapper {
     public OrderDTO entityToDto(Order order);
     public Order DtoToEntity(OrderDTO orderDTO);
