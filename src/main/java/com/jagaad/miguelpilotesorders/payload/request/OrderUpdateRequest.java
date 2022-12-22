@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class OrderUpdateRequest {
     String idOrderToUpdate;
-    String orderDelivery;
+    String orderDeliveryAddress;
     int pilotesQuantity;
 
 }

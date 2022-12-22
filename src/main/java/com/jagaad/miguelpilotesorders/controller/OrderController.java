@@ -32,7 +32,7 @@ public class OrderController {
             return ResponseEntity.ok().body(takeOrderResponse);
         }
         takeOrderResponse.setStatusTakeOrderRequest(InputValidator.errorMessage);
-        return ResponseEntity.badRequest().body(takeOrderResponse);
+        return ResponseEntity.ok().body(takeOrderResponse);
     }
 
     @PostMapping("/update")
@@ -43,7 +43,7 @@ public class OrderController {
             return ResponseEntity.ok().body(orderUpdateResponse);
         }
         orderUpdateResponse.setStatusOrderUpdateRequest(InputValidator.errorMessage);
-        return ResponseEntity.badRequest().body(orderUpdateResponse);
+        return ResponseEntity.ok().body(orderUpdateResponse);
     }
 
     @PostMapping("/search")
@@ -54,7 +54,7 @@ public class OrderController {
             return ResponseEntity.ok().body(searchOrdersResponse);
         }
         searchOrdersResponse.setStatusSearchOrderRequest(InputValidator.errorMessage);
-        return ResponseEntity.badRequest().body(searchOrdersResponse);
+        return ResponseEntity.ok().body(searchOrdersResponse);
     }
 
 }
