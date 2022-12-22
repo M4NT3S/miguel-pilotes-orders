@@ -1,5 +1,6 @@
 package com.jagaad.miguelpilotesorders.service;
 
+import com.jagaad.miguelpilotesorders.controller.OrderController;
 import com.jagaad.miguelpilotesorders.dto.OrderDTO;
 import com.jagaad.miguelpilotesorders.entity.Client;
 import com.jagaad.miguelpilotesorders.entity.Order;
@@ -15,6 +16,8 @@ import com.jagaad.miguelpilotesorders.repository.ClientRepository;
 import com.jagaad.miguelpilotesorders.repository.OrderRepository;
 import com.jagaad.miguelpilotesorders.utils.Constants;
 import com.jagaad.miguelpilotesorders.validator.TimeValidator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +28,8 @@ import java.util.NoSuchElementException;
 
 @Service
 public class OrderService {
+
+    private static final Logger log = LoggerFactory.getLogger(OrderService.class);
     @Autowired
     OrderMapper orderMapper;
 
@@ -40,7 +45,7 @@ public class OrderService {
     TimeValidator timeValidator;
 
     public TakeOrderResponse takeOrder(TakeOrderRequest takeOrderRequest) {
-
+        log.info("starting take order method");
         Client clientRequestingOrder = clientMapper.DtoToEntity(takeOrderRequest.getClient());
         clientRepository.save(clientRequestingOrder);
         List<OrderDTO> orderDTOList = takeOrderRequest.getOrders();
@@ -65,6 +70,7 @@ public class OrderService {
     }
 
     public OrderUpdateResponse updateOrder(OrderUpdateRequest orderUpdateRequest) {
+        log.info("starting update order method");
         try {
             Order order = orderRepository.findById(orderUpdateRequest.getIdOrderToUpdate()).get();
             Timestamp timestampNow = new Timestamp(System.currentTimeMillis());
@@ -73,11 +79,15 @@ public class OrderService {
                 if (orderUpdateRequest.getOrderDeliveryAddress() != null) {
                     order.setDeliveryAddress(orderUpdateRequest.getOrderDeliveryAddress());
                 }
+
                 if (orderUpdateRequest.getPilotesQuantity() != 0) {
                     order.setPilotesQuantity(orderUpdateRequest.getPilotesQuantity());
                     double newOrderPrice = calculateOrderTotal(orderUpdateRequest.getPilotesQuantity());
                     order.setOrderTotal(newOrderPrice);
                     statusOrderRequest += "and the new order total price is set at " + newOrderPrice;
+                }
+                if(orderUpdateRequest.getOrderDeliveryAddress() == null && orderUpdateRequest.getPilotesQuantity() == 0) {
+                    statusOrderRequest = "No update was performed, no new value requested to update";
                 }
 
             } else {
@@ -88,7 +98,7 @@ public class OrderService {
                     .build();
 
         } catch (NoSuchElementException e) {
-            e.printStackTrace();
+            log.error("The order to update wasn't found in the database", e);
         }
 
         return OrderUpdateResponse.builder()
@@ -97,7 +107,7 @@ public class OrderService {
     }
 
     public SearchOrdersResponse searchOrders(SearchOrdersRequest searchOrdersRequest) {
-
+        log.info("starting search orders method");
         List<Order> ordersRetrieved = new ArrayList<>();
         List<OrderDTO> ordersRetrievedDTO = new ArrayList<>();
         List<Client> clientListSearched;

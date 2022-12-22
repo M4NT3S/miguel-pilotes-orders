@@ -8,6 +8,8 @@ import java.util.List;
 
 @Data
 public class TakeOrderRequest {
+
     ClientDTO client;
+
     List<OrderDTO> orders;
 }

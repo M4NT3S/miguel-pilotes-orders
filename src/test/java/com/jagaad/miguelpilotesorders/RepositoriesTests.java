@@ -27,7 +27,7 @@ public class RepositoriesTests {
     private ClientRepository clientRepository;
 
     @Test
-    public void insertOrder(){
+    public void insertOrder() {
         Client clientTest = Client.builder().build();
         Order orderTest = Order.builder()
                 .deliveryAddress("via Costantino Baroni 05")
@@ -41,19 +41,19 @@ public class RepositoriesTests {
         Assertions.assertThat(orderTest.getId()).isNotEmpty();
     }
 
-   @Test
-    public void retrieveOrderFromSpecificId(){
-       Client clientTest = Client.builder().build();
-       Order orderTest = Order.builder()
-               .deliveryAddress("via Costantino Baroni 05")
-               .pilotesQuantity(5)
-               .orderTotal(50.00)
-               .client(clientTest)
-               .build();
+    @Test
+    public void retrieveOrderFromSpecificId() {
+        Client clientTest = Client.builder().build();
+        Order orderTest = Order.builder()
+                .deliveryAddress("via Costantino Baroni 05")
+                .pilotesQuantity(5)
+                .orderTotal(50.00)
+                .client(clientTest)
+                .build();
         orderRepository.save(orderTest);
         Order retrievingOrderTest = orderRepository.findById(orderTest.getId()).get();
         log.info(retrievingOrderTest.getId());
-       Assertions.assertThat(retrievingOrderTest).isNotNull();
+        Assertions.assertThat(retrievingOrderTest).isNotNull();
     }
 
     @Test
@@ -71,7 +71,7 @@ public class RepositoriesTests {
     }
 
     @Test
-    public void updateOrder(){
+    public void updateOrder() {
         Client clientTest = Client.builder().build();
         Order insertingOrderTest = Order.builder()
                 .deliveryAddress("via Costantino Baroni 05")
@@ -87,7 +87,7 @@ public class RepositoriesTests {
     }
 
     @Test
-    public void insertClient(){
+    public void insertClient() {
         Client clientTest = Client.builder()
                 .name("Sebastian")
                 .surname("Macchi")
@@ -109,7 +109,7 @@ public class RepositoriesTests {
     }
 
     @Test
-    public void retrievingMultipleOrdersFromSpecificClient(){
+    public void retrievingMultipleOrdersFromSpecificClient() {
         Client clientTest = Client.builder()
                 .name("Sebastian")
                 .surname("Macchi")
@@ -138,9 +138,6 @@ public class RepositoriesTests {
 
         listOrdersClientTest.stream().forEach(order -> Assertions.assertThat(order.getClient().getId()).isEqualTo(clientTest.getId()));
     }
-
-
-
 
 
 }
