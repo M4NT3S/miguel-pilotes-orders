@@ -14,7 +14,7 @@ The API exposes three resources.
 **path** : /take
 
 The take method takes in input two different objects.
-A client with the information needed to identify how's making the request (such as name, surname, email ecc.) and a list of all the orders related to that path (we know one single order isn't enough!)
+A client with the information needed to identify who's making the request (such as name, surname, email ecc.) and a list of all the orders related to that path (we know one single order isn't enough!)
 
 **Constraint:** The only constraint is the pilotes quantity for each order, that can be 5, 10 or 15
 
