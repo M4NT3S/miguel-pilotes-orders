@@ -11,13 +11,14 @@ import com.jagaad.miguelpilotesorders.validator.InputValidator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ResourceBundle;
 
 @RestController
 @RequestMapping("/miguel-pilotes-orders/orders")
+@CrossOrigin("http://localhost:4200")
 public class OrderController {
 
     @Autowired
@@ -35,10 +36,10 @@ public class OrderController {
         if(inputValidator.validate(takeOrderRequest)) {
             log.info("received request to take order by client with email " + takeOrderRequest.getClient().getEmail());
             takeOrderResponse = orderService.takeOrder(takeOrderRequest);
-            return ResponseEntity.ok().body(takeOrderResponse);
+            return ResponseEntity.status(HttpStatus.CREATED).body(takeOrderResponse);
         }
         takeOrderResponse.setStatusTakeOrderRequest(InputValidator.errorMessage);
-        return ResponseEntity.ok().body(takeOrderResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(takeOrderResponse);
     }
 
     @PostMapping("/update")
@@ -47,10 +48,10 @@ public class OrderController {
         if(inputValidator.validate(orderUpdateRequest)) {
             log.info("received request to update order with id: " + orderUpdateRequest.getIdOrderToUpdate());
             orderUpdateResponse = orderService.updateOrder(orderUpdateRequest);
-            return ResponseEntity.ok().body(orderUpdateResponse);
+            return ResponseEntity.status(HttpStatus.OK).body(orderUpdateResponse);
         }
         orderUpdateResponse.setStatusOrderUpdateRequest(InputValidator.errorMessage);
-        return ResponseEntity.ok().body(orderUpdateResponse);
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(orderUpdateResponse);
     }
 
     @PostMapping("/search")
@@ -59,13 +60,17 @@ public class OrderController {
             @RequestHeader("password") String password,
             @RequestBody SearchOrdersRequest searchOrdersRequest) {
         SearchOrdersResponse searchOrdersResponse = new SearchOrdersResponse();
-        if(inputValidator.validate(searchOrdersRequest) && inputValidator.validateCredentials(username, password)) {
-            log.info("received request to search orders related to field: " + searchOrdersRequest.getFieldSearchingFor() + " and the value it's: " + searchOrdersRequest.getValueToSearch());
-            searchOrdersResponse = orderService.searchOrders(searchOrdersRequest);
-            return ResponseEntity.ok().body(searchOrdersResponse);
+        if(inputValidator.validateCredentials(username, password)) {
+            if(inputValidator.validate(searchOrdersRequest)){
+                log.info("received request to search orders related to field: " + searchOrdersRequest.getFieldSearchingFor() + " and the value it's: " + searchOrdersRequest.getValueToSearch());
+                searchOrdersResponse = orderService.searchOrders(searchOrdersRequest);
+                return ResponseEntity.status(HttpStatus.OK).body(searchOrdersResponse);
+            }
+            searchOrdersResponse.setStatusSearchOrderRequest(InputValidator.errorMessage);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(searchOrdersResponse);
         }
         searchOrdersResponse.setStatusSearchOrderRequest(InputValidator.errorMessage);
-        return ResponseEntity.ok().body(searchOrdersResponse);
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(searchOrdersResponse);
     }
 
 }

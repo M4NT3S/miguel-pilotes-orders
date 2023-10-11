@@ -34,8 +34,6 @@ public class Order {
     @Column(name = "order_total")
     private double orderTotal;
 
-
-
     @ManyToOne(fetch=FetchType.EAGER, cascade = CascadeType.PERSIST)
     @JoinColumn(name="client_id")
     private Client client;
